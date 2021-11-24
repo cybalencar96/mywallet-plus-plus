@@ -1,15 +1,15 @@
 import * as userService from '../services/userService.js';
 
 async function signup(req, res) {
+    const { name, email, password } = req.body;
+
     try {
-      const { name, email, password } = req.body;
   
       if (!name || !email || !password) {
         return res.sendStatus(400);
       }
   
       const existingUserWithGivenEmail = await userService.getByEmail(email);
-  
       if (existingUserWithGivenEmail) {
         return res.sendStatus(409);
       }
@@ -24,23 +24,24 @@ async function signup(req, res) {
   }
 
 async function signin (req, res) {
+    const { email, password } = req.body;
+
     try {
-        const { email, password } = req.body;
 
         if (!email || !password) {
-        return res.sendStatus(400);
+            return res.sendStatus(400);
         }
 
 
         const user = await userService.validateUserCredentials({ email, password });
         if (!user) {
-        return res.sendStatus(401);
+            return res.sendStatus(401);
         }
 
         const token = await userService.signin(user.id);
 
         res.send({
-        token,
+            token,
         });
     } catch (err) {
         console.error(err);

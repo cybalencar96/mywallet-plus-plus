@@ -47,9 +47,7 @@ async function getTotalFinancialEvents(req, res) {
     const user = res.locals.user;
 
     try {
-        const events = await financialEventsService.getFinancialsFromUser(user.id);
-
-        const sum = events.reduce((total, event) => event.type === 'INCOME' ? total + event.value : total - event.value, 0);
+        const sum = await financialEventsService.getSumFromUser(user.id)
 
         res.send({ sum });
     } catch (err) {
